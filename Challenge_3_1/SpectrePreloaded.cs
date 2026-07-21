@@ -17,14 +17,36 @@ internal static class SpectrePreloaded
             Console.WriteLine();
         }
     }
-    public static bool DoesUserWantToQuit()
+    //===========================================================================
+    public static bool PrimitiveDoesUserWantToQuit()
     {
         Console.Write($"\nEnter Q to quit or press ENTER to continue.");
         string userInput = Console.ReadLine();
         bool result = (userInput.Trim().Equals("q", StringComparison.OrdinalIgnoreCase) == true);
-        Console.WriteLine("---------------------------------------------------------------------------");
+        Console.WriteLine("-------------------------------");
         return result;
     }
+    //===========================================================================
+    public static bool AskUserToContinue()
+    {
+        // 1. Create a selection prompt (drop-down style)
+        var prompt = new SelectionPrompt<string>()
+            .Title("\nDo you wish to continue?")
+            .AddChoices(new[] { "yes", "no" })
+            .DefaultValue("yes");
+
+        // 2. Use Live Display context or Status to auto-hide the console menu
+        string selection = AnsiConsole.Live(new Text("")).Start(ctx =>
+        {
+            // Present the prompt to the user
+            return AnsiConsole.Prompt(prompt);
+        });
+
+        bool result = selection.Equals("yes", StringComparison.OrdinalIgnoreCase);
+        Console.WriteLine("-------------------------------");
+        return result;
+    }
+    //===========================================================================
     public static void ShutdownTasks(bool doReadline = false, bool doClear = false)
     {
         if (doReadline)
@@ -32,12 +54,56 @@ internal static class SpectrePreloaded
         if (doClear)
             Console.Clear();
     }
-
+    //===========================================================================
     public static string AskUserForString()
     {
         string inputString = AnsiConsole.Prompt(
             new TextPrompt<string>("Please input a string: ")
             );
         return inputString;
+    }
+    //===========================================================================
+    public static bool AskUserYesOrNoQuestion(string question, bool defaultAnswer = true)
+    {
+        // 1. Create a selection prompt (drop-down style)
+        var prompt = new SelectionPrompt<string>()
+            .Title(question)
+            .AddChoices(new[] { "yes", "no" })
+            .DefaultValue(defaultAnswer ? "yes" : "no");
+
+        // 2. Use Live Display context or Status to auto-hide the console menu
+        string selection = AnsiConsole.Live(new Text("")).Start(ctx =>
+        {
+            // Present the prompt to the user
+            return AnsiConsole.Prompt(prompt);
+        });
+        return selection.Equals("yes", StringComparison.OrdinalIgnoreCase);
+    }
+    //===========================================================================
+    public static bool GetStringAskUserYesNoQuestion(string prompt)
+    {
+        string? answer = AnsiConsole.Prompt(
+            new TextPrompt<string>(prompt)
+            //.AddChoice("y")
+            //.AddChoice("n")
+            .DefaultValue("y")
+            .InvalidChoiceMessage("[red]Invalid option.[/] Please reply with n or press enter for y.")
+            .Validate(input =>
+            {
+                string cleanInput = input.Trim().ToLower();
+                return cleanInput is "y" or "n"
+                    ? ValidationResult.Success()
+                    : ValidationResult.Error("[red]Invalid option![/] Please reply with n or press enter for y.");
+            }));
+        if (answer != null)
+        {
+            if (answer.Equals("yes") || answer.Equals("y"))
+                return true;
+            else
+                return false;
+        }
+        Console.WriteLine("error at end of line");
+        Console.Beep();
+        return false;
     }
 }
