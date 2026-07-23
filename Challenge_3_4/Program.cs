@@ -51,12 +51,22 @@ while (true)
     input = GenRandomABCDTestString();
 
 
+
     // define variables, print starting string
     string patternAB = "AB";
     string patternCD = "CD";
     string workingString = input; // only make edits to workingString
-    Console.WriteLine($"Initial String: {workingString}  Length: {workingString.Length}");
+    //Console.WriteLine($"Initial String: {workingString}  Length: {workingString.Length}");
 
+
+
+
+
+
+    // METHOD ONE - brute force
+    Console.WriteLine("\nMethod 1: brute force  (while-iterate through string, if patterns found replace, if none found exit)\n");
+    
+    Console.WriteLine($"Initial String: {workingString}  Length: {workingString.Length}");
     // 1. loop until no more replacements possible
     bool stillSearching = true;
     while (stillSearching)
@@ -81,8 +91,8 @@ while (true)
             workingString = workingString.Remove(foundPatternCD, 2);
         }
 
-        // 6. if no patterns found, stop searching
-        if ((foundPatternAB == -1) && (foundPatternCD == -1))
+        // 6. if no patterns found, stop searching   (required to check both vars in this implementation)
+        if (((foundPatternAB == -1) && (foundPatternCD == -1)) || (workingString.Length == 0))
         {
             stillSearching = false;
         }
@@ -100,6 +110,15 @@ while (true)
 
 
 
+    Console.WriteLine("\nMethod 2: stack  (at each pattern found using Index, push string)\n");
+        // 1. loop until no more replacements possible
+        // 2. check for AB
+        // 3. remove AB
+        // 4. check for CD
+        // 5. remove CD
+        // 6. if no patterns found, stop searching   (required to check both vars in this implementation)
+    // 7. show result
+    Console.WriteLine($"Updated String: {workingString}   Length: {workingString.Length}");
 
 
 
@@ -108,7 +127,9 @@ while (true)
 
 
 
-    
+
+
+
 
 
     /*
