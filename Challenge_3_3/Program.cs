@@ -1,6 +1,4 @@
-﻿using static System.Runtime.InteropServices.JavaScript.JSType;
-
-Console.WriteLine("Challenge_3_3: return array indices of numbers adding to target value \n");
+﻿Console.WriteLine("Challenge_3_3: return array indices of numbers adding to target value \n");
 
 while (true)
 {
@@ -23,7 +21,6 @@ while (true)
 
     // method 2. define randomized test case using larger array, rather than soliciting user for input
     int[] array = new int[11] { 1, 2, 4, 7, 11, 15, 24, 26, 31, 43, 54 };
-
     Random random = new();
     int firstIndex = random.Next(11);
     int secondIndex = random.Next(11);

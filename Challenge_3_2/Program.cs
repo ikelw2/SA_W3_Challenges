@@ -47,7 +47,7 @@ int SumDigitsInString (string testString, bool showVerboseComments = false)
     int sum = 0;
     foreach (char c in testString)
     {
-        if (char.IsNumber(c))
+        if (char.IsNumber(c)) // use IsDigit not IsNumber
         {
             int number = Convert.ToInt32(Char.GetNumericValue(c));
             sum += number;
