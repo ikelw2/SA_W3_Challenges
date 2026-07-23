@@ -33,23 +33,32 @@ while (true)
     //     Explanation: We cannot do any operations on the string so the length remains the same.
     //
 
-    // some test cases ABFCACDBD
-
+    //
     // can brute force it in ex 4, or can use a stack... // leetcode 2696
-    // it doesn't matter which AB or CD type is... all that matters is the particular index we replace each time...
-
+    //
+    // ... it doesn't matter which AB or CD type is... all that matters is the particular index we replace each time...
+    //
+    // additional explanation:
+    //
+    // initially I thought that it mattered which AB or CD index you replaced first. After thinking about it
+    // I came to the realization that I think it doens't matter which pathway the program chooses, as long as it 
+    // replaces the text, which simplifies the problem greatly - since we are no longer trying to find the 
+    // 'best index sequence' to replace found patterns.
+    //
 
     string input = "ABFCACDBAB";
+    // below line auto-generates test string, comment it out to use the above set string
     input = GenRandomABCDTestString();
 
 
+    // define variables, print starting string
     string patternAB = "AB";
     string patternCD = "CD";
     string workingString = input; // only make edits to workingString
     Console.WriteLine($"Initial String: '{workingString}'");
-    bool stillSearching = true;
 
     // 1. loop until no more replacements possible
+    bool stillSearching = true;
     while (stillSearching)
     { 
         // 2. check for AB
@@ -60,7 +69,6 @@ while (true)
         {
             PrintHighlighted(foundPatternAB, patternAB, workingString);
             workingString = workingString.Remove(foundPatternAB, 2);
-            //Console.WriteLine($"                '{workingString}'");
         }
 
         // 4. check for CD
@@ -71,15 +79,32 @@ while (true)
         {
             PrintHighlighted(foundPatternCD, patternCD, workingString);
             workingString = workingString.Remove(foundPatternCD, 2);
-            //Console.WriteLine($"                '{workingString}'");
         }
 
+        // 6. if no patterns found, stop searching
         if ((foundPatternAB == -1) && (foundPatternCD == -1))
         {
             stillSearching = false;
         }
     }
+
+    // 7. show result
     Console.WriteLine($"Updated String: '{workingString}'   Length: {workingString.Length}");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -211,6 +236,7 @@ void PrintHighlighted(int index, string pattern, string working)
         return;
     }
     
+
     // 1. print start of string in gray
     if (index > 0) // if not at start index of string
     {
@@ -222,9 +248,11 @@ void PrintHighlighted(int index, string pattern, string working)
         AnsiConsole.Markup($"                [gray]'[/]");
     }
     
+
     // 2. print found pattern in red
     AnsiConsole.Markup($"[red]{pattern}[/]");
     
+
     // 3. print last part of string in gray
     if (index < (working.Length - 1) - 2) // if not at last-1 (-2 for pattern) index of string
     {
