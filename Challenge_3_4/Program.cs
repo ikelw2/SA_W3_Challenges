@@ -70,7 +70,7 @@ while (true)
 
 
     // not sure how I used Remove, but I used it for this first solution. It works but it's not how the instructions said to do it
-    
+    /*
     Console.WriteLine($"Initial String: {workingString}  Length: {workingString.Length}");
     // 1. loop until no more replacements possible
     bool stillSearching = true;
@@ -106,7 +106,7 @@ while (true)
     // 7. show result
     Console.WriteLine($"Updated String: {workingString}   Length: {workingString.Length}");
 
-
+    */
 
 
 
@@ -123,13 +123,13 @@ while (true)
     Console.WriteLine($"      Initial String: {workingString}  Length: {workingString.Length}");
 
     // naive approach #2 using correct "replace" function
-    int finalLength = 0;
+    int stringLength = 0;
     while (workingString.Length > 0)
     {
         string temp = workingString.Replace("AB", null).Replace("CD", null);
         if (temp.Equals(workingString))
         {
-            finalLength = temp.Length;
+            stringLength = temp.Length;
             break;
         }
         else
@@ -175,6 +175,9 @@ while (true)
     //
     // gotta remember that when using a stack, it's ideally suited to compare two separate values when going through a linear structure like a string
     // think "I have a dish holder rack, and I'm trying to go through a pile of dishes to determine when I come across two dishes one after the other in a particular pattern 'AB' or 'BC'
+    //
+    // also can be done using two pointers
+    //
 
     Stack<char> stack = new Stack<char>();
     foreach (char next in workingString) 
