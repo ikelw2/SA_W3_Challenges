@@ -1,8 +1,15 @@
 ﻿//using System.Collections.Generic; 
-using System.Runtime.InteropServices.Marshalling;
 using Spectre.Console;
+using System.Collections;
+using System.ComponentModel.Design;
+using System.Runtime.InteropServices.Marshalling;
+using static System.Net.Mime.MediaTypeNames;
 
 Console.WriteLine("Challenge_3_4: return shortest length after replace exhaustive pairs in string \n");
+
+// METHOD ONE - brute force
+Console.WriteLine("\nMethod 1: brute force  (while-iterate through string, if patterns found replace, if none found exit)\n");
+
 
 while (true)
 {
@@ -46,7 +53,7 @@ while (true)
     // 'best index sequence' to replace found patterns.
     //
 
-    string input = "ABFCACDBAB";
+    string input = "ABFCACDBAB"; //  "ABCDABCD" tested
     // below line auto-generates test string, comment it out to use the above set string
     input = GenRandomABCDTestString();
 
@@ -62,9 +69,7 @@ while (true)
 
 
 
-
-    // METHOD ONE - brute force
-    Console.WriteLine("\nMethod 1: brute force  (while-iterate through string, if patterns found replace, if none found exit)\n");
+    // not sure how I used Remove, but I used it for this first solution. It works but it's not how the instructions said to do it
     
     Console.WriteLine($"Initial String: {workingString}  Length: {workingString.Length}");
     // 1. loop until no more replacements possible
@@ -110,78 +115,101 @@ while (true)
 
 
 
-    Console.WriteLine("\nMethod 2: stack  (at each pattern found using Index, push string)\n");
-        // 1. loop until no more replacements possible
-        // 2. check for AB
-        // 3. remove AB
-        // 4. check for CD
-        // 5. remove CD
-        // 6. if no patterns found, stop searching   (required to check both vars in this implementation)
-    // 7. show result
-    Console.WriteLine($"Updated String: {workingString}   Length: {workingString.Length}");
 
 
+    //=====================================================================================================
+    Console.WriteLine("\n            Method 2: Replace\n");
+    workingString = input; 
+    Console.WriteLine($"      Initial String: {workingString}  Length: {workingString.Length}");
 
-
-
-
-
-
-
-
-
-
-
-    /*
-    Stack < Node> history = new Stack<Node>(); // use stack to keep track of our traversals
-    history.Push(new Node(input, -1)); // starting point
-    
-    List<int> bestSequenceSoFar = new List<int>(); // update this when we find a better option
-
-    while (history.Count > 0 ) // 
-    { 
-        List<int> curSequenceTesting... // if not already in history?
-        // for each option, push to progress a step of replacement, and save indices to internal list
-
-        // if no more replacements, save progress to 
-
-    }
-    */
-
-    //List<int> Options = GetListOfRemainingPatterns(input);
-    //    foreach (int option in Options)
-    //    {
-    //        i.Push(option);
-    //        workingString = s.Peek()
-    //    }
-    //}
-
-    /*
-    List<int> GetListOfRemainingPatterns(string text)
+    // naive approach #2 using correct "replace" function
+    int finalLength = 0;
+    while (workingString.Length > 0)
     {
-        List<int> result = new List<int>();
-        for (int i = 0; i < (len - 1); i++)
+        string temp = workingString.Replace("AB", null).Replace("CD", null);
+        if (temp.Equals(workingString))
         {
-            if ((text.IndexOf("AB") == i) || (text.IndexOf("CD") == i))
+            finalLength = temp.Length;
+            break;
+        }
+        else
+        {
+            Console.WriteLine($"         temp String: {temp}");
+        }
+        workingString = temp;
+    }
+    Console.WriteLine($"      Updated String: {workingString}   Length: {workingString.Length}");
+
+
+
+
+
+
+
+    //=====================================================================================================
+    Console.WriteLine("\n            Method 3: Recursion\n");
+    workingString = input;
+    Console.WriteLine($"      Initial String: {workingString}  Length: {workingString.Length}");
+    
+    // naive approach #3 using recursive function (need to scroll to bottom to see function, but has been copied to comments below)
+    recurseReplace( workingString, workingString.Length );
+
+
+
+
+
+
+
+
+
+    //=====================================================================================================
+    Console.WriteLine("\n            Method 4: Stack\n");
+    workingString = input;
+    Console.WriteLine($"      Initial String: {workingString}  Length: {workingString.Length}");
+    
+    //**
+    // methodology, I didn't get it correct myself, I had to check a web-provided summary of answer :(
+    //**
+
+    // focus on the scan - using a stack I am essentially checking if two elements are in sequence, as I linearly walk the string char by char
+    //
+    // gotta remember that when using a stack, it's ideally suited to compare two separate values when going through a linear structure like a string
+    // think "I have a dish holder rack, and I'm trying to go through a pile of dishes to determine when I come across two dishes one after the other in a particular pattern 'AB' or 'BC'
+
+    Stack<char> stack = new Stack<char>();
+    foreach (char next in workingString) 
+    {
+        if (stack.Count == 0)
+        {
+            stack.Push(next);
+        }
+        else
+        {
+            char top = stack.Peek();
+            if ( (next == 'B' && 'A' == top) || // if previous pushed char is 'A' and next char is 'B' (pattern 1)   OR
+                 (next == 'D' && 'C' == top) )  // if previous pushed char is 'C' and next char is 'D' (pattern 2)
             {
-                result.Add(i);
+                stack.Pop(); // ...remove the last char pushed
+            }
+            else
+            {
+                stack.Push(next); // otherwise add next char to stack
             }
         }
-        return result;
     }
-    */
+    Console.WriteLine($"      Updated String: (skipped)   Length: {stack.Count}");
 
 
-    //         'abcdefab'  -->  there are three options -->   [0] [2] and [6] out of highest index of 7
-    // Console.WriteLine($"findqtr('ABCDA') = {FindQtyPatterns("ABCDAS")}"); // 2
-    // go one by one through those options, save indexed replacements to stack for easy recall, and save resulting length of string to integer (for comparison with other solutions)
-    // try each option fully, saveing all branch options for comparison to figure out which resulted in the least remaining characters
 
-    //for (int i = 0; i < input.Length; i++)
-    //{
-    //    if (input.IndexOf("PA", StringComparison.OrdinalIgnoreCase);
-    //    if (input.IndexOf(AB)
-    //}
+
+
+
+
+
+
+
+
+
 
 
 
@@ -200,6 +228,41 @@ while (true)
     Console.WriteLine("-----------------------------------------------------");
 }
 Console.WriteLine();
+
+
+
+
+
+
+
+// ------------------------------
+string recurseReplace(string s, int size)
+{
+    string n = s.Replace("AB", null, StringComparison.OrdinalIgnoreCase).Replace("CD", null, StringComparison.OrdinalIgnoreCase);
+    if (size != n.Length) // changes made
+    {
+        //Console.WriteLine($"         temp String: {n}");
+        if (size == 0)
+        {
+            return "";
+        }
+        return recurseReplace(n, n.Length);
+    }
+    else // no changes made, all done searching
+    {
+        Console.WriteLine($"      Updated String: {n}   Length: {n.Length}");
+        return n;
+    }
+}
+
+
+
+
+
+
+
+
+
 
 
 
@@ -290,76 +353,3 @@ void PrintHighlighted(int index, string pattern, string working)
     // Console.WriteLine($"                '{workingString}'");
 }
 // ------------------------------
-
-//=============================================================================
-//
-// this solution object will require saving WHICH INDEX **of the optional replacements** WE REPLACE (subtracting two chars from a linear array of characters/string each time)
-//   .. we are essentially navigating along a linear string
-//         'abcdefab'  -->  there are three options -->   [0] [2] and [6] out of highest index of 7
-// in order to traverse/test each option, we will need to create a new object at each of those junctures, and continue processing from that status point...
-//
-// so it should save in object (starting state to begin with)
-// -array of already replaced indices (starts at [] for initial string)
-// -current string before replacement
-// -array of optional replacements at this juncture
-//
-// each time before we do a replacement, we push the current juncture, so we can traverse the entire string in depth, and return to our original string, but with the best option saved separately...
-// two part procedure: traverse, and if results are better than previous, save the pathway to get there.
-
-public struct Node
-{
-    public string CurString { get; set; }
-    public int LastIndex { get; set; }
-
-    public Node(string curString, int lastIndex)
-    {
-        CurString = curString;
-        LastIndex = lastIndex;
-    }
-}
-
-//public struct Node
-//{
-//    List<int> History { get; set; }
-//    public string CurString { get; set; }
-//    public int Count { get; set; }
-//    List<int> Options { get; set; }
-//    public Node(string history, string curString, int count)
-//    {
-//        PrevReplaceIndex = new List<int>();
-//        Options = new List<int>();
-//        CurrentString = newString;
-//        Options = GetRemainingPatterns();
-
-//    }
-
-
-//    private int[] GetRemainingPatterns()
-//    {
-//        int qty = 0;
-//        int len = CurrentString.Length;
-//        for (int i = 0; i < (len - 1); i++) // check each character in string to determine if possible to replace it
-//        {
-//            if ((CurrentString.IndexOf("AB") == i) || (CurrentString.IndexOf("CD") == i))
-//            {
-//                qty++; // first count a tally to determine size of array to return
-//            }
-//        }
-//        int[] result = new int[qty];
-
-//        return result;
-//    }
-//}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// useful code chunks to have on easy recall
-
-// Random random = new();
-// int firstIndex = random.Next(x); // returns from 0 to x inclusive
-
-// string input = "search string for pattern";
-// bool found = input.Contains("fo"); // found == true
-// int index = input.IndexOf("fo"); // index = 14
-
-// int index = input.IndexOf("PA", StringComparison.OrdinalIgnoreCase); // index = 18
