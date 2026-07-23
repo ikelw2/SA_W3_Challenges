@@ -55,7 +55,7 @@ while (true)
     string patternAB = "AB";
     string patternCD = "CD";
     string workingString = input; // only make edits to workingString
-    Console.WriteLine($"Initial String: '{workingString}'");
+    Console.WriteLine($"Initial String: {workingString}  Length: {workingString.Length}");
 
     // 1. loop until no more replacements possible
     bool stillSearching = true;
@@ -89,7 +89,7 @@ while (true)
     }
 
     // 7. show result
-    Console.WriteLine($"Updated String: '{workingString}'   Length: {workingString.Length}");
+    Console.WriteLine($"Updated String: {workingString}   Length: {workingString.Length}");
 
 
 
@@ -203,7 +203,7 @@ string GenRandomABCDTestString() // generate random input string for testing
 
     // 1. create 30 char uppercase string with random letters
     char[] charArray = Enumerable.Range(0, random.Next(minLength, maxLength))
-        .Select(_ => (char)random.Next('A', 'F' + 1))
+        .Select(_ => (char)random.Next('A', 'E' + 1))
         .ToArray();
 
     // 2. Inject the patterns at random valid index locations
@@ -232,7 +232,7 @@ void PrintHighlighted(int index, string pattern, string working)
     if (index == -1)
     {
         // print entire string and return
-        AnsiConsole.Markup($"                [gray]'{working}'[/]");
+        AnsiConsole.Markup($"                [gray]{working}[/]");
         return;
     }
     
@@ -241,11 +241,11 @@ void PrintHighlighted(int index, string pattern, string working)
     if (index > 0) // if not at start index of string
     {
         string firstPart = working.Substring(0, index);
-        AnsiConsole.Markup($"                [gray]'{firstPart}[/]");
+        AnsiConsole.Markup($"                [gray]{firstPart}[/]");
     }
     else
     {
-        AnsiConsole.Markup($"                [gray]'[/]");
+        AnsiConsole.Markup($"                [gray][/]");
     }
     
 
@@ -254,14 +254,14 @@ void PrintHighlighted(int index, string pattern, string working)
     
 
     // 3. print last part of string in gray
-    if (index < (working.Length - 1) - 2) // if not at last-1 (-2 for pattern) index of string
+    if (index < (working.Length - 1) - 1) // if not at last-1 (-2 for pattern) index of string
     {
         string lastPart = working.Substring(index+2);
-        AnsiConsole.Markup($"[gray]{lastPart}'[/]");
+        AnsiConsole.Markup($"[gray]{lastPart}[/]");
     }
     else
     {
-        AnsiConsole.Markup($"[gray]'[/]");
+        AnsiConsole.Markup($"[gray][/]");
     }
 
     Console.WriteLine();
